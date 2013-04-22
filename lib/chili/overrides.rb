@@ -8,7 +8,9 @@ module Chili
     module InstanceMethods
       def activate_overrides
         Deface::Override.all.values.map(&:values).flatten.each do |override|
-          override.args[:disabled] = !override.railtie_class.constantize.parent.active?(self)
+          if override.railtie_class.constantize.parent.respond_to? :active?
+            override.args[:disabled] = !override.railtie_class.constantize.parent.active?(self)
+          end
         end
       end
     end
